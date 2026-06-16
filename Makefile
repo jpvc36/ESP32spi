@@ -2,6 +2,7 @@
 CROSS_COMPILE :=
 KERNEL := /lib/modules/$(shell uname -r)/build
 ARCH := arm
+CORES := $(shell nproc)
 
 # Normalize ARCH
 ifeq ($(ARCH), x86_64)
@@ -31,12 +32,12 @@ $(MODULE_NAME)-y := $(module_objects)
 
 # Build targets
 all: clean
-	$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(KERNEL) M=$(PWD) modules
+	$(MAKE) -j$(CORES) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(KERNEL) M=$(PWD) modules
 
 clean:
 	rm -rf *.o */*.o *.ko *.mod.c *.symvers *.order .*.cmd .tmp_versions
-	$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(KERNEL) M=$(PWD) clean
+	$(MAKE) -j$(CORES) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(KERNEL) M=$(PWD) clean
 
 check:
-	$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(KERNEL) M=$(PWD) $(module_objects)
+	$(MAKE) -j$(CORES) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(KERNEL) M=$(PWD) $(module_objects)
 
