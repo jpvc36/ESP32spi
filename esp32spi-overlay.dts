@@ -1,4 +1,5 @@
-// dtc -I dts -O dtb -o /boot/overlays/esp32spi.dtbo esp32spi-overlay.dts
+// sudo dtc -I dts -O dtb -o /boot/overlays/esp32spi.dtbo esp32spi-overlay.dts
+// sudo dtc -I dts -O dtb -o /boot/firmware/overlays/esp32spi.dtbo esp32spi-overlay.dts
 //#include <dt-bindings/gpio/gpio.h>
 /dts-v1/;
 /plugin/;
