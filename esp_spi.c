@@ -670,7 +670,11 @@ static struct spi_driver esp_spi_driver = {
         .of_match_table = esp_spi_of_match,
     },
     .probe = esp_core_init,
-    .remove = esp_core_exit,
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
+	.remove = esp_core_exit,
+#else
+	.remove = esp_core5_exit,
+#endif
     .id_table = esp_spi_ids,
 };
 
