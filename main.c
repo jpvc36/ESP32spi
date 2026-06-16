@@ -1108,7 +1108,7 @@ int esp_core_init(struct spi_device *spi)
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 1, 0)
 	void esp_core_exit(struct spi_device *spi)
 #else
-	int esp_core_exit(struct spi_device *spi)
+	int esp_core5_exit(struct spi_device *spi)
 #endif
 {
 	uint8_t iface_idx = 0;
