@@ -1,0 +1,87 @@
+// dtc -I dts -O dtb -o /boot/overlays/esp32spi.dtbo esp32spi-overlay.dts
+//#include <dt-bindings/gpio/gpio.h>
+/dts-v1/;
+/plugin/;
+/*
+/ {
+    compatible = "brcm,bcm2835";
+
+    fragment@0 {
+        target = <&spidev0>;
+
+        __overlay__ {
+            status = "disabled";
+        };
+    };
+
+    fragment@1 {
+        target = <&spi0>;
+
+        __overlay__ {
+            #address-cells = <1>;
+            #size-cells = <0>;
+
+            esp32: esp32@0 {
+                compatible = "espressif,esp32_spi";
+                reg = <0>;
+                spi-max-frequency = <10000000>;
+
+                reset-gpios =
+                        <&gpio 23 1>;
+
+                handshake-gpios =
+                        <&gpio 24 1>;
+
+                dataready-gpios =
+                        <&gpio 25 1>;
+            };
+        };
+    };
+};
+*/
+//#include <dt-bindings/gpio/gpio.h>
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "brcm,bcm2835";
+
+    fragment@0 {
+        target = <&spidev0>;
+        __overlay__ {
+            status = "disabled";
+        };
+    };
+
+    fragment@1 {
+        target = <&spi0>;
+        __overlay__ {
+            #address-cells = <1>;
+            #size-cells = <0>;
+
+            esp32: esp32@0 {
+                compatible = "espressif,esp32_spi";
+                reg = <0>;
+                spi-max-frequency = <10000000>;
+                reset-gpios = <&gpio 23 0>;// GPIO_ACTIVE_LOW>;
+                handshake-gpios = <&gpio 24 1>;// GPIO_ACTIVE_HIGH>;
+                dataready-gpios = <&gpio 25 1>;// GPIO_ACTIVE_HIGH>;
+            };
+        };
+    };
+
+    fragment@2 {
+        target = <&gpio>;
+        __overlay__ {
+            // Ensures the pins are available as inputs/outputs
+            esp32_pins: esp32_pins {
+                brcm,pins = <23 24 25>;
+                brcm,function = <1 0 0>; // 1=output (reset), 0=input
+            };
+        };
+    };
+
+    __overrides__ {
+        reset_pin = <&esp32>,"reset-gpios:4";
+    };
+};
