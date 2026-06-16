@@ -50,6 +50,7 @@ enum {
 struct spi_device;
 int esp_core_init(struct spi_device *spi);
 int esp_core_exit(struct spi_device *spi);
+void esp_core5_exit(struct spi_device *spi);
 void esp_spi_reset(bool reset);
 
 #endif
