@@ -503,8 +503,8 @@ static int spi_dev_init(int spi_clk_mhz)
 
 void esp_spi_reset(bool reset)
 {
-        gpiod_set_value_cansleep(spi_context.reset_gpio, reset);
-        msleep(200);
+        gpiod_set_value_cansleep(spi_context.reset_gpio, !reset);
+        msleep(300);
 }
 
 static int spi_init(void)
