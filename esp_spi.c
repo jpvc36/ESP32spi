@@ -293,8 +293,6 @@ static void esp_spi_work(struct work_struct *work)
 	int ret = 0;
 	volatile int trans_ready, rx_pending;
 
-//	trans_ready = gpio_get_value(HANDSHAKE_PIN);
-//	rx_pending = gpio_get_value(SPI_DATA_READY_PIN);
 	trans_ready = !gpiod_get_value(spi_context.handshake_gpio);
 	rx_pending = !gpiod_get_value(spi_context.dataready_gpio);
 
@@ -417,13 +415,7 @@ static int spi_dev_init(int spi_clk_mhz)
 {
 	int status = 0;
 
-//	struct gpio_desc *handshake_gpio;
-//	struct gpio_desc *dataready_gpio;
-//	struct gpio_desc *reset_gpio;
-//	int handshake_irq;
-//	int dataready_irq;
-
-	esp_info("Using SPI MODE %d\n",g_spi_mode);
+		esp_info("Using SPI MODE %d\n",g_spi_mode);
 
 	set_bit(ESP_SPI_BUS_CLAIMED, &spi_context.spi_flags);
 	spi_context.adapter->dev = &spi_context.esp_spi_dev->dev;
