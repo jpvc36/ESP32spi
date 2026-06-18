@@ -83,6 +83,7 @@
     };
 
     __overrides__ {
-        reset_pin = <&esp32>,"reset-gpios:4";
+        resetpin = <&esp32>,"reset-gpios:4";
+        chipselect = <&esp32>, "reg:0", <0>, "!0=1";
     };
 };
