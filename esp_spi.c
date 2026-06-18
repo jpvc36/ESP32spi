@@ -293,8 +293,10 @@ static void esp_spi_work(struct work_struct *work)
 	int ret = 0;
 	volatile int trans_ready, rx_pending;
 
-	trans_ready = gpio_get_value(HANDSHAKE_PIN);
-	rx_pending = gpio_get_value(SPI_DATA_READY_PIN);
+//	trans_ready = gpio_get_value(HANDSHAKE_PIN);
+//	rx_pending = gpio_get_value(SPI_DATA_READY_PIN);
+	trans_ready = !gpiod_get_value(spi_context.handshake_gpio);
+	rx_pending = !gpiod_get_value(spi_context.dataready_gpio);
 
 	if (!trans_ready) {
 		return;
@@ -415,8 +417,8 @@ static int spi_dev_init(int spi_clk_mhz)
 {
 	int status = 0;
 
-	struct gpio_desc *handshake_gpio;
-	struct gpio_desc *dataready_gpio;
+//	struct gpio_desc *handshake_gpio;
+//	struct gpio_desc *dataready_gpio;
 //	struct gpio_desc *reset_gpio;
 	int handshake_irq;
 	int dataready_irq;
@@ -428,27 +430,27 @@ static int spi_dev_init(int spi_clk_mhz)
 
 	set_bit(ESP_SPI_BUS_SET, &spi_context.spi_flags);
 
-	handshake_gpio =
+	spi_context.handshake_gpio =
 		devm_gpiod_get(&spi_context.esp_spi_dev->dev,
 		"handshake",
 		GPIOD_IN);
-	if (IS_ERR(handshake_gpio)) {
+	if (IS_ERR(spi_context.handshake_gpio)) {
 		esp_err("Failed to obtain GPIO for Handshake pin, err:%d\n",
-		PTR_ERR(handshake_gpio));
-		return PTR_ERR(handshake_gpio);
+		PTR_ERR(spi_context.handshake_gpio));
+		return PTR_ERR(spi_context.handshake_gpio);
 	}
 	set_bit(ESP_SPI_GPIO_HS_REQUESTED, &spi_context.spi_flags);
 
-	handshake_irq = gpiod_to_irq(handshake_gpio);
+	spi_context.handshake_irq = gpiod_to_irq(spi_context.handshake_gpio);
 
-	if (handshake_irq < 0) {
+	if (spi_context.handshake_irq < 0) {
 		esp_err("Failed to obtain IRQ for Handshake pin, err:%d\n",
-			handshake_irq);
-		return handshake_irq;
+			spi_context.handshake_irq);
+		return spi_context.handshake_irq;
 	}
 
 	status = devm_request_irq(&spi_context.esp_spi_dev->dev,
-		handshake_irq, spi_interrupt_handler,
+		spi_context.handshake_irq, spi_interrupt_handler,
 		IRQF_SHARED | IRQF_TRIGGER_RISING,
 		"ESP_SPI",
 		spi_context.esp_spi_dev);
@@ -459,30 +461,30 @@ static int spi_dev_init(int spi_clk_mhz)
 
 	set_bit(ESP_SPI_GPIO_HS_IRQ_DONE, &spi_context.spi_flags);
 
-	dataready_gpio =
+	spi_context.dataready_gpio =
 		devm_gpiod_get(&spi_context.esp_spi_dev->dev,
 		"dataready",
 		GPIOD_IN);
-	if (IS_ERR(dataready_gpio)) {
+	if (IS_ERR(spi_context.dataready_gpio)) {
 		esp_err("Failed to obtain GPIO for DataReady pin, err:%d\n",
-		PTR_ERR(dataready_gpio));
-		return PTR_ERR(dataready_gpio);
+		PTR_ERR(spi_context.dataready_gpio));
+		return PTR_ERR(spi_context.dataready_gpio);
 	}
 	set_bit(ESP_SPI_GPIO_DR_REQUESTED, &spi_context.spi_flags);
 
-	dataready_irq = gpiod_to_irq(dataready_gpio);
+	spi_context.dataready_irq = gpiod_to_irq(spi_context.dataready_gpio);
 
 	status = devm_request_irq(&spi_context.esp_spi_dev->dev,
-                          dataready_irq,
+                          spi_context.dataready_irq,
                           spi_data_ready_interrupt_handler,
                           IRQF_SHARED | IRQF_TRIGGER_RISING,
                           "ESP_SPI_DATA_READY",
                           spi_context.esp_spi_dev);
 
-	if (dataready_irq < 0) {
+	if (spi_context.dataready_irq < 0) {
         	esp_err("Failed to obtain IRQ for Dataready pin, err:%d\n",
-                	dataready_irq);
-        	return dataready_irq;
+                	spi_context.dataready_irq);
+        	return spi_context.dataready_irq;
 	}
 
 	set_bit(ESP_SPI_GPIO_DR_IRQ_DONE, &spi_context.spi_flags);
