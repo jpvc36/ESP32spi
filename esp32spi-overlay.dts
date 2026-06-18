@@ -3,46 +3,6 @@
 //#include <dt-bindings/gpio/gpio.h>
 /dts-v1/;
 /plugin/;
-/*
-/ {
-    compatible = "brcm,bcm2835";
-
-    fragment@0 {
-        target = <&spidev0>;
-
-        __overlay__ {
-            status = "disabled";
-        };
-    };
-
-    fragment@1 {
-        target = <&spi0>;
-
-        __overlay__ {
-            #address-cells = <1>;
-            #size-cells = <0>;
-
-            esp32: esp32@0 {
-                compatible = "espressif,esp32_spi";
-                reg = <0>;
-                spi-max-frequency = <10000000>;
-
-                reset-gpios =
-                        <&gpio 23 1>;
-
-                handshake-gpios =
-                        <&gpio 24 1>;
-
-                dataready-gpios =
-                        <&gpio 25 1>;
-            };
-        };
-    };
-};
-*/
-//#include <dt-bindings/gpio/gpio.h>
-/dts-v1/;
-/plugin/;
 
 / {
     compatible = "brcm,bcm2835";
