@@ -28,9 +28,11 @@ enum spi_flags_e {
 struct esp_spi_context {
 	struct esp_adapter          *adapter;
 	struct spi_device           *esp_spi_dev;
-        struct gpio_desc            *reset_gpio;
-        struct gpio_desc            *handshake_gpio;
-        struct gpio_desc            *dataready_gpio;
+    struct gpio_desc            *reset_gpio;
+    struct gpio_desc            *handshake_gpio;
+    struct gpio_desc            *dataready_gpio;
+	uint8_t                     handshake_irq;
+	uint8_t                     dataready_irq;
 	struct sk_buff_head         tx_q[MAX_PRIORITY_QUEUES];
 	struct sk_buff_head         rx_q[MAX_PRIORITY_QUEUES];
 	struct workqueue_struct     *spi_workqueue;
