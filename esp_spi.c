@@ -420,8 +420,8 @@ static int spi_dev_init(int spi_clk_mhz)
 //	struct gpio_desc *handshake_gpio;
 //	struct gpio_desc *dataready_gpio;
 //	struct gpio_desc *reset_gpio;
-	int handshake_irq;
-	int dataready_irq;
+//	int handshake_irq;
+//	int dataready_irq;
 
 	esp_info("Using SPI MODE %d\n",g_spi_mode);
 
