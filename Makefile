@@ -31,7 +31,7 @@ obj-m := $(MODULE_NAME).o
 $(MODULE_NAME)-y := $(module_objects)
 
 # Build targets
-all: clean
+all:
 	$(MAKE) -j$(CORES) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(KERNEL) M=$(PWD) modules
 
 clean:
